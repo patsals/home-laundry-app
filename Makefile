@@ -1,19 +1,19 @@
 ### Total app
 run: build
-	docker-compose up -d
+	docker compose up -d
 
 build:
-	docker-compose build
+	docker compose build
 
 stop: 
-	docker-compose down
+	docker compose down
 
 logs:
-	docker-compose logs db
+	docker compose logs db
 
 # DANGEROUS - WILL RESULT IN DATA LOSS
 clean:
-	docker-compose down || echo "..."
+	docker compose down || echo "..."
 	docker volume rm home-laundry-app_postgres_data
 	docker volume rm home-laundry-app_grafana_data
 
@@ -41,4 +41,4 @@ api-server-env:
 ### Database
 # while in terminal type "\q" to quit
 db-connect: stop run
-	docker-compose exec db psql -U user -d laundry 
+	docker compose exec db psql -U user -d laundry 
