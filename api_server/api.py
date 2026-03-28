@@ -1,7 +1,9 @@
+import time
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-import time
+import database
 
 
 app = FastAPI(
@@ -24,6 +26,8 @@ async def post_accelerometer_data(request: Request):
         current_timestamp_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(current_timestamp))
         data = await request.json()
         print(f"{current_timestamp_str} - {str(data)}")
+
+        database.insert_accelerometer_signal_log_data(data)
 
         return JSONResponse(
                 status_code=200,

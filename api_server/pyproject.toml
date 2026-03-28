@@ -10,4 +10,7 @@ dependencies = [
     "requests==2.32.5",
     "uvicorn==0.42.0",
     "werkzeug==3.1.6",
+    "gunicorn==21.2.0",
+    "sqlalchemy",
+    "psycopg2-binary",
 ]
