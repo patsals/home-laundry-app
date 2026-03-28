@@ -1,2 +1,6 @@
 # virtual environments
 **/venv/
+**/.venv/
+
+# cached files
+**/*cache*/
