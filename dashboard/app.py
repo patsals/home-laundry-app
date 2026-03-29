@@ -112,29 +112,45 @@ st.title("Laundry Activity Dashboard")
 col1, col2 = st.columns(2)
 
 with col1:
+    st.divider()
     st.markdown(
         kpi_bubble("Washing Machine", washing_machine_is_active),
         unsafe_allow_html=True
     )
-    st.subheader("Activity - Last 6 Hours")
     fig = px.line(
         washing_machine_activity_df, 
         x='timestamp', 
-        y=['x','y','z'], 
-        labels={'value':'Sensor Value','timestamp':'Time'},
+        y='magnitude', 
+        labels={
+            'timestamp': 'Time (PST)',
+            'magnitude': 'Acceleration Magnitude (m/s²)'
+        },
+    )
+    fig.update_layout(
+        xaxis_title="Time (PST)",
+        yaxis_title="Acceleration Magnitude (m/s²)",
+        title="Last 6 Hours"
     )
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
+    st.divider()
     st.markdown(
         kpi_bubble("Drying Machine", drying_machine_is_active),
         unsafe_allow_html=True
     )
-    st.subheader("Activity - Last 6 Hours")
     fig = px.line(
         drying_machine_activity_df, 
         x='timestamp', 
-        y=['x','y','z'], 
-        labels={'value':'Sensor Value','timestamp':'Time'},
+        y='magnitude',
+        labels={
+            'timestamp': 'Time (PST)',
+            'magnitude': 'Acceleration Magnitude (m/s²)'
+        },
+    )
+    fig.update_layout(
+        xaxis_title="Time (PST)",
+        yaxis_title="Acceleration Magnitude (m/s²)",
+        title="Last 6 Hours"
     )
     st.plotly_chart(fig, use_container_width=True)

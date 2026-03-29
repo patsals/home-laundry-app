@@ -45,9 +45,14 @@ def get_accelerometer_signal_log_data_last_6_hours(
     select_statement = (
         select(
             accelerometer_signal_logs_table.c.timestamp,
-            accelerometer_signal_logs_table.c.x,
-            accelerometer_signal_logs_table.c.y,
-            accelerometer_signal_logs_table.c.z,
+            func.sqrt(
+                accelerometer_signal_logs_table.c.x * 
+                    accelerometer_signal_logs_table.c.x +
+                accelerometer_signal_logs_table.c.y * 
+                    accelerometer_signal_logs_table.c.y +
+                accelerometer_signal_logs_table.c.z * 
+                    accelerometer_signal_logs_table.c.z
+            ).label("magnitude")
         )
         .where(
             (
