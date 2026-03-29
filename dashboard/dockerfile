@@ -1,0 +1,21 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY pyproject.toml poetry.lock* /app/
+
+RUN apt-get update && apt-get install -y curl build-essential \
+    && curl -sSL https://install.python-poetry.org | python3 - \
+    && PATH="/root/.local/bin:$PATH" \
+    && poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi --no-root
+
+COPY . /app
+
+EXPOSE 8501
+
+# hide obnoxious "deploy" button
+RUN mkdir -p /root/.streamlit && \
+    echo "[client]\ntoolbarMode = \"minimal\"" > /root/.streamlit/config.toml
+
+CMD ["streamlit", "run", "app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]

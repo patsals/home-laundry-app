@@ -22,20 +22,18 @@ services:
       - ./database:/docker-entrypoint-initdb.d # initialize db schema + tables
       - postgres_data:/var/lib/postgresql/data
 
-  grafana:
-    image: grafana/grafana
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: dockerfile
     ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - "8501:8501"
     depends_on:
       - db
-    volumes:
-      - grafana_data:/var/lib/grafana
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: laundry
 
 volumes:
   postgres_data:
-  grafana_data:

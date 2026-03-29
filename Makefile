@@ -37,6 +37,24 @@ api-server-env:
 	uv venv --clear && \
 	uv sync
 
+### Dashboard
+dashboard-run-docker:
+	cd dashboard && \
+	docker build -t laundry-dashboard . && \
+	docker run -it --rm \
+		-p 8501:8501 \
+		-v $$(pwd):/app \
+		laundry-dashboard \
+		streamlit run app.py \
+			--server.port 8501 \
+			--server.address 0.0.0.0 \
+			--server.headless=true \
+			--server.fileWatcherType=watchdog
+
+dashboard-env:
+	cd dashboard && \
+	uv venv --clear && \
+	uv sync
 
 ### Database
 # while in terminal type "\q" to quit
