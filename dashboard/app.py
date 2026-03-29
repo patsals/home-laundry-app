@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_autorefresh import st_autorefresh
 import plotly.express as px
 import pandas as pd
 import numpy as np
@@ -31,7 +32,6 @@ def kpi_bubble(title, is_active):
     </div>
     """
 
-
 def get_device_activity_last_6_hours(device_id: int):
     df = database.get_accelerometer_signal_log_data_last_6_hours(
         device_id=device_id
@@ -39,14 +39,13 @@ def get_device_activity_last_6_hours(device_id: int):
     df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
     df['timestamp'] = df['timestamp'].dt.tz_localize('UTC')
     df['timestamp'] = df['timestamp'].dt.tz_convert('America/Los_Angeles')
+    df['timestamp'] = df['timestamp'].dt.floor('T')
 
     return df.sort_values(by="timestamp")
 
 
 def is_device_active(device_id: int):
-    activity_df = get_device_activity_last_6_hours(
-        device_id=device_id
-    )
+    activity_df = get_device_activity_last_6_hours(device_id=device_id)
 
     if activity_df.empty:
         return False
@@ -61,13 +60,10 @@ def is_device_active(device_id: int):
 
 
 def generate_full_device_activity_last_6_hours(device_id: int):
-    activity_df = get_device_activity_last_6_hours(
-        device_id=device_id
-    )
+    activity_df = get_device_activity_last_6_hours(device_id=device_id)
 
-    now_pst = pd.Timestamp.now(tz="America/Los_Angeles")
-
-    start_pst = now_pst - pd.Timedelta(hours=6)
+    now_pst = pd.Timestamp.now(tz="America/Los_Angeles").floor('T')
+    start_pst = (now_pst - pd.Timedelta(hours=6)).floor('T')
 
     # create a range every minute
     time_range = pd.date_range(
@@ -104,6 +100,8 @@ drying_machine_is_active = is_device_active(
 
 
 #### APP LAYOUT ####
+st_autorefresh(interval=30_000, key="datarefresh")
+
 st.set_page_config(
     page_title="Laundry Activity Dashboard",
     page_icon="👕",
