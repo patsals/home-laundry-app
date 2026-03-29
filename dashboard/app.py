@@ -78,12 +78,12 @@ def generate_full_device_activity_last_6_hours(device_id: int):
     )
     time_df = pd.DataFrame({'timestamp': time_range})
 
-    return time_df.join(
-        activity_df, 
-        how="left", 
+    return pd.merge(
+        time_df,
+        activity_df,
         on='timestamp',
-        lsuffix='',
-        rsuffix='_actual'
+        how='left',
+        suffixes=('', '_actual')
     )
 
 
